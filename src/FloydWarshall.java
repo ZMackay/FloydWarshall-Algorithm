@@ -1,6 +1,5 @@
 import java.io.BufferedReader;
 
-import java.io.FileNotFoundException;
 
 import java.io.FileReader;
 
@@ -9,8 +8,10 @@ import java.util.Arrays;
 public class FloydWarshall {
 
 	public static void main(String[] args) throws InterruptedException {
+		
+		String file = args[0];
 
-		new FloydWarshall(readFileToMatrix("YOUR-FILE-HERE"));
+		new FloydWarshall(readFileToMatrix(file));
 
 	}
 
@@ -75,7 +76,9 @@ public class FloydWarshall {
 	}
 
 	static int[][] readFileToMatrix(String file) {
-
+		
+		
+		
 		int rowCount = 0;
 
 		int[][] matrix = null;
@@ -92,7 +95,7 @@ public class FloydWarshall {
 
 			br.close();
 
-			matrix = new int[5][5];
+			matrix = new int[rowCount][rowCount];
 
 			br = new BufferedReader(new FileReader(file));
 
