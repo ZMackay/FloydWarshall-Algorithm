@@ -1,27 +1,40 @@
 import java.io.BufferedReader;
-
-
 import java.io.FileReader;
+import java.util.HashMap;
 
-import java.util.Arrays;
 
+/**
+ * 
+ * @author Zachary Mackay
+ * 
+ * This program will take in a file path as a command line argument. This file must be
+ * tab delimited in the format nodeX	nodeY	Weight. This program is reads all edges
+ *  as an undirected edge and supports multiple connections to one node or from one node.
+ * 
+ *
+ */
 public class FloydWarshall {
 
 	public static void main(String[] args) throws InterruptedException {
-		
+
 		String file = args[0];
 
 		new FloydWarshall(readFileToMatrix(file));
 
 	}
 
-	public FloydWarshall(int[][] W) throws InterruptedException {
+	/**
+	 * Main constructor will call the calculation and printing of all distance matrices and predecessors matrices.
+	 * @param W integer matrix created from the readFileToMatrix() method
+	 * 
+	 */
+	public FloydWarshall(int[][] W) {
 
 		int[][] pred = initPred(W);
 
 		int n = W.length;
 
-		int[][] D = new int[5][5];
+		int[][] D = new int[n][n];
 
 		for (int i = 0; i < W.length; i++) {
 
@@ -63,22 +76,48 @@ public class FloydWarshall {
 
 	}
 
+	/**
+	 * This method will print the matrix given to it into a formatted output to the console
+	 * @param W integer matrix created from the readFileToMatrix() method
+	 */
 	public static void printArray(int[][] W) {
 
-		for (int i = 0; i < W.length; i++) {
+		String str = "";
 
-			System.out.println(Arrays.toString(W[i]));
+		for (int row = 0; row < W.length; row++) {
+			str += String.format("%-3s", row) + "|";
+			String rowStr = "";
+			for (int col = 0; col < W[0].length; col++) {
+				if (W[row][col] == 9999) {
+					rowStr = String.format("%-4s|", "INF");
+				} else {
+					rowStr = String.format("%-4s|", W[row][col]);
+				}
+				str += rowStr;
+			}
 
+			str += "\n";
 		}
 
-		System.out.println("\n\n");
+		String rowStr = "";
+		for (int col = 0; col < W[0].length; col++) {
+			rowStr = String.format("%5s", col);
+			str += rowStr;
+		}
+
+		System.out.println(str + "\n\n");
 
 	}
 
+	/**
+	 * This method will read the file that was passed to it and convert it into an integer matrix.
+	 * @param file file path that was passed by the command line arguments
+	 * @return integer matrix that was read
+	 */
 	static int[][] readFileToMatrix(String file) {
-		
-		
-		
+
+		HashMap<Integer, Boolean> nodes = new HashMap<Integer, Boolean>();
+
 		int rowCount = 0;
 
 		int[][] matrix = null;
@@ -87,9 +126,23 @@ public class FloydWarshall {
 
 			BufferedReader br = new BufferedReader(new FileReader(file));
 
-			while (br.readLine() != null) {
+			String line = "";
+			while ((line = br.readLine()) != null) {
+				String[] tokens = line.split("\t");
 
-				rowCount++;
+				int Node1 = Integer.parseInt(tokens[0]);
+
+				int Node2 = Integer.parseInt(tokens[1]);
+
+				if (!nodes.containsKey(Node1) || !nodes.get(Node1)) {
+					nodes.put(Node1, true);
+					rowCount++;
+				}
+
+				if (!nodes.containsKey(Node2) || !nodes.get(Node2)) {
+					nodes.put(Node2, true);
+					rowCount++;
+				}
 
 			}
 
@@ -99,7 +152,7 @@ public class FloydWarshall {
 
 			br = new BufferedReader(new FileReader(file));
 
-			String line = "";
+			line = "";
 
 			while ((line = br.readLine()) != null) {
 
@@ -141,6 +194,11 @@ public class FloydWarshall {
 
 	}
 
+	/**
+	 * Initializes the matrix passed to it 
+	 * @param W integer matrix.
+	 * @return integer matrix filled with default values in it to make arithmetic correct.
+	 */
 	public static int[][] initPred(int W[][]) {
 
 		int p[][] = new int[W.length][W.length];
