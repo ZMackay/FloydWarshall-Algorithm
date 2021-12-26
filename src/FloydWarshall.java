@@ -130,25 +130,21 @@ public class FloydWarshall {
 			while ((line = br.readLine()) != null) {
 				String[] tokens = line.split("\t");
 
-				int Node1 = Integer.parseInt(tokens[0]);
-
-				int Node2 = Integer.parseInt(tokens[1]);
-
-				if (!nodes.containsKey(Node1) || !nodes.get(Node1)) {
-					nodes.put(Node1, true);
-					rowCount++;
+				if(Integer.parseInt(tokens[0]) >= rowCount) {
+					rowCount = Integer.parseInt(tokens[0]);
 				}
-
-				if (!nodes.containsKey(Node2) || !nodes.get(Node2)) {
-					nodes.put(Node2, true);
-					rowCount++;
+				
+				if(Integer.parseInt(tokens[1]) >= rowCount) {
+					rowCount = Integer.parseInt(tokens[1]);
 				}
+				
+				
 
 			}
 
 			br.close();
 
-			matrix = new int[rowCount][rowCount];
+			matrix = new int[rowCount+1][rowCount+1];
 
 			br = new BufferedReader(new FileReader(file));
 
